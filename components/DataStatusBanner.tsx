@@ -1,8 +1,8 @@
 'use client';
 
-import { AlertTriangle, Info, RefreshCw } from 'lucide-react';
 import type { FetchStatus, RateLimitInfo } from '@/lib/github-types';
 import { formatUtcDateTime } from '@/lib/github-logic';
+import { MetroIcon } from './MetroIcon';
 
 interface DataStatusBannerProps {
   status: FetchStatus;
@@ -29,22 +29,22 @@ export function DataStatusBanner({
     <div
       role="status"
       aria-live="polite"
-      className="flex flex-col gap-3 border border-[#a3a2a5] bg-[#f7f7f8] p-4 sm:flex-row sm:items-center sm:justify-between rounded-sm"
+      className="flex flex-col gap-3 bg-[#f2f2f3] p-4 text-[#18181b] sm:flex-row sm:items-center sm:justify-between"
     >
       <div className="flex items-start gap-3">
         {isRateLimit ? (
-          <AlertTriangle
-            className="mt-0.5 h-4 w-4 shrink-0 text-[#ea580c]"
-            aria-hidden="true"
+          <MetroIcon
+            name="warning"
+            className="mt-0.5 shrink-0 text-[15px] text-[#ea580c]"
           />
         ) : (
-          <Info
-            className="mt-0.5 h-4 w-4 shrink-0 text-[#111113]"
-            aria-hidden="true"
+          <MetroIcon
+            name="info"
+            className="mt-0.5 shrink-0 text-[15px] text-[#52525b]"
           />
         )}
         <div className="space-y-1">
-          <p className="text-sm font-semibold text-[#111113]">
+          <p className="text-sm font-semibold text-[#18181b]">
             {isRateLimit
               ? 'GitHub API rate limit reached'
               : status === 'not_found'
@@ -68,11 +68,11 @@ export function DataStatusBanner({
           type="button"
           onClick={onRetry}
           disabled={retrying}
-          className="inline-flex min-h-[40px] items-center gap-2 self-start border border-[#111113] bg-white px-3.5 py-2 text-xs font-semibold text-[#111113] transition-colors hover:bg-[#111113] hover:text-white disabled:opacity-50 sm:self-center rounded-sm whitespace-nowrap shrink-0"
+          className="inline-flex min-h-[40px] items-center gap-2 self-start border-2 border-[#18181b] bg-white px-4 py-1.5 text-xs font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white disabled:opacity-50 sm:self-center whitespace-nowrap shrink-0"
         >
-          <RefreshCw
-            className={`h-3.5 w-3.5 ${retrying ? 'animate-spin' : ''}`}
-            aria-hidden="true"
+          <MetroIcon
+            name="loop2"
+            className={`text-[13px] ${retrying ? 'animate-spin' : ''}`}
           />
           <span>{retrying ? 'Retrying...' : 'Retry fetch'}</span>
         </button>

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 border-t border-[#a3a2a5]/50 bg-[#f7f7f8]">
+    <footer className="mt-20 bg-[#f2f2f3] text-[#18181b]">
       <div
         className={cn(
           'mx-auto flex flex-col gap-6 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6',
@@ -12,7 +12,7 @@ export function SiteFooter() {
         )}
       >
         <div className="space-y-1">
-          <p className="font-mono text-xs font-medium text-[#111113]">
+          <p className="font-mono text-xs font-semibold text-[#18181b]">
             {siteConfig.identity.handle}
           </p>
           <p className="text-xs text-[#52525b]">
@@ -28,18 +28,18 @@ export function SiteFooter() {
             <Link
               key={item.href}
               href={item.href}
-              className="transition-colors hover:text-[#111113] whitespace-nowrap"
+              className="transition-colors hover:text-[#18181b] whitespace-nowrap"
             >
-              {item.label}
+              {item.label.toLowerCase()}
             </Link>
           ))}
           <a
             href={siteConfig.identity.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-[#111113] transition-colors hover:text-[#ea580c] whitespace-nowrap"
+            className="font-semibold text-[#c2410c] transition-colors hover:text-[#18181b] whitespace-nowrap"
           >
-            GitHub
+            github
           </a>
         </nav>
       </div>

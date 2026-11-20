@@ -22,7 +22,7 @@ export function AvatarFrame({
     return (
       <div
         style={{ width: size, height: size }}
-        className="flex shrink-0 items-center justify-center border border-[#a3a2a5] bg-[#f7f7f8] font-mono text-sm font-semibold text-[#111113] rounded-sm"
+        className="flex shrink-0 items-center justify-center bg-[#111113] font-mono text-sm font-semibold text-white"
         aria-label={alt}
       >
         {handle.slice(0, 2).toUpperCase()}
@@ -33,7 +33,7 @@ export function AvatarFrame({
   return (
     <div
       style={{ width: size, height: size }}
-      className="relative shrink-0 overflow-hidden border border-[#a3a2a5] bg-[#f7f7f8] rounded-sm"
+      className="relative shrink-0 overflow-hidden bg-[#111113]"
     >
       <Image
         src={src}

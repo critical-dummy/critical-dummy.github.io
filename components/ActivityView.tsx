@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowUpRight, Info, RefreshCw } from 'lucide-react';
 import {
   extractLanguages,
   formatUtcDate,
@@ -16,6 +15,7 @@ import type {
   GitHubUserProfile,
 } from '@/lib/github-types';
 import { DataStatusBanner } from './DataStatusBanner';
+import { MetroIcon } from './MetroIcon';
 
 interface ActivityViewProps {
   initialProfile: GitHubResult<GitHubUserProfile>;
@@ -92,9 +92,9 @@ export function ActivityView({
           : null;
 
   return (
-    <div className="space-y-8">
-      {/* Toolbar & Refresh */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e4e4e7] pb-4">
+    <div className="space-y-10">
+      {/* Metro Command Strip */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-[#f2f2f3] px-4 py-3">
         <div className="font-mono text-xs text-[#52525b] tabular-nums">
           Last checked: {formatUtcDateTime(eventsResult.fetchedAt)}
         </div>
@@ -103,11 +103,11 @@ export function ActivityView({
           type="button"
           onClick={handleRefresh}
           disabled={isRefreshing}
-          className="inline-flex min-h-[40px] items-center gap-2 border border-[#e4e4e7] bg-white px-3.5 py-2 text-xs font-semibold text-[#111113] transition-colors hover:border-[#a3a2a5] disabled:opacity-50 rounded-sm whitespace-nowrap shrink-0"
+          className="inline-flex min-h-[38px] items-center gap-2 border-2 border-[#18181b] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white disabled:opacity-50 whitespace-nowrap shrink-0"
         >
-          <RefreshCw
-            className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`}
-            aria-hidden="true"
+          <MetroIcon
+            name="loop2"
+            className={`text-[13px] ${isRefreshing ? 'animate-spin' : ''}`}
           />
           <span>{isRefreshing ? 'Syncing activity...' : 'Refresh activity'}</span>
         </button>
@@ -123,90 +123,106 @@ export function ActivityView({
         />
       )}
 
-      {/* Honest Data Availability Overview */}
+      {/* Official Metro Live KPI Tiles (large light value top-left, label bottom-left) */}
       <section
         aria-labelledby="activity-overview-heading"
         className="space-y-4"
       >
         <h2
           id="activity-overview-heading"
-          className="text-base font-semibold text-[#111113]"
+          className="text-2xl font-light tracking-tight text-[#18181b]"
         >
-          Public GitHub Snapshot
+          public github snapshot
         </h2>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="border border-[#e4e4e7] bg-white p-4 rounded-sm">
-            <p className="text-xs font-medium text-[#52525b]">
-              Public repositories
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex min-h-[144px] flex-col justify-between bg-[#18181b] p-5 text-white">
+            <p className="font-mono text-4xl font-light text-white tabular-nums">
+              {profileResult.status === 'ok' && profile ? (
+                profile.publicRepos
+              ) : reposResult.status === 'ok' ? (
+                repos.length
+              ) : (
+                <span className="text-2xl text-[#a3a2a5]">Unavailable</span>
+              )}
             </p>
-            <p className="mt-1 font-mono text-xl font-semibold text-[#111113] tabular-nums">
-              {profileResult.status === 'ok' && profile
-                ? profile.publicRepos
-                : reposResult.status === 'ok'
-                  ? repos.length
-                  : 'Unavailable'}
-            </p>
-            <p className="mt-1 text-xs text-[#52525b]">
-              {profileResult.status === 'ok'
-                ? 'Live from /users profile'
-                : 'Profile endpoint unavailable'}
-            </p>
+            <div className="space-y-0.5">
+              <p className="text-sm font-semibold text-white">
+                Public repositories
+              </p>
+              <p className="text-xs text-[#a3a2a5]">
+                {profileResult.status === 'ok'
+                  ? 'Live from /users profile'
+                  : 'Profile endpoint unavailable'}
+              </p>
+            </div>
           </div>
 
-          <div className="border border-[#e4e4e7] bg-white p-4 rounded-sm">
-            <p className="text-xs font-medium text-[#52525b]">
-              Recent public events (90d)
+          <div className="flex min-h-[144px] flex-col justify-between bg-[#f2f2f3] p-5 text-[#18181b]">
+            <p className="font-mono text-4xl font-light text-[#c2410c] tabular-nums">
+              {eventsAvailable ? (
+                summary.totalRecentEvents
+              ) : (
+                <span className="text-2xl text-[#52525b]">Unavailable</span>
+              )}
             </p>
-            <p className="mt-1 font-mono text-xl font-semibold text-[#111113] tabular-nums">
-              {eventsAvailable ? summary.totalRecentEvents : 'Unavailable'}
-            </p>
-            <p className="mt-1 text-xs text-[#52525b]">
-              {eventsAvailable
-                ? summary.totalRecentEvents === 0
-                  ? 'Zero events in 90-day window'
-                  : `Latest ${formatUtcDate(summary.latestEventAt)}`
-                : 'Events endpoint unavailable'}
-            </p>
+            <div className="space-y-0.5">
+              <p className="text-sm font-semibold text-[#18181b]">
+                Recent public events (90d)
+              </p>
+              <p className="text-xs text-[#52525b]">
+                {eventsAvailable
+                  ? summary.totalRecentEvents === 0
+                    ? 'Zero events in 90-day window'
+                    : `Latest ${formatUtcDate(summary.latestEventAt)}`
+                  : 'Events endpoint unavailable'}
+              </p>
+            </div>
           </div>
 
-          <div className="border border-[#e4e4e7] bg-white p-4 rounded-sm">
-            <p className="text-xs font-medium text-[#52525b]">
-              365-day contribution total
-            </p>
-            <p className="mt-1 font-mono text-xl font-semibold text-[#52525b]">
+          <div className="flex min-h-[144px] flex-col justify-between bg-[#f2f2f3] p-5 text-[#18181b]">
+            <p className="font-mono text-2xl font-light text-[#52525b]">
               Unavailable
             </p>
-            <p className="mt-1 text-xs text-[#52525b]">
-              Requires authenticated GraphQL API
-            </p>
+            <div className="space-y-0.5">
+              <p className="text-sm font-semibold text-[#18181b]">
+                365-day contribution total
+              </p>
+              <p className="text-xs text-[#52525b]">
+                Requires authenticated GraphQL API
+              </p>
+            </div>
           </div>
 
-          <div className="border border-[#e4e4e7] bg-white p-4 rounded-sm">
-            <p className="text-xs font-medium text-[#52525b]">
-              Account created
+          <div className="flex min-h-[144px] flex-col justify-between bg-[#f2f2f3] p-5 text-[#18181b]">
+            <p className="font-mono text-2xl font-light text-[#18181b] tabular-nums">
+              {profileResult.status === 'ok' && profile ? (
+                formatUtcDate(profile.createdAt)
+              ) : (
+                <span className="text-[#52525b]">Unavailable</span>
+              )}
             </p>
-            <p className="mt-1 font-mono text-xl font-semibold text-[#111113] tabular-nums">
-              {profileResult.status === 'ok' && profile
-                ? formatUtcDate(profile.createdAt)
-                : 'Unavailable'}
-            </p>
-            <p className="mt-1 text-xs text-[#52525b]">
-              {profileResult.status === 'ok' && profile
-                ? `${profile.followers} follower${profile.followers === 1 ? '' : 's'} · ${profile.following} following`
-                : 'Profile metadata unavailable'}
-            </p>
+            <div className="space-y-0.5">
+              <p className="text-sm font-semibold text-[#18181b]">
+                Account created
+              </p>
+              <p className="text-xs text-[#52525b]">
+                {profileResult.status === 'ok' && profile
+                  ? `${profile.followers} follower${profile.followers === 1 ? '' : 's'} · ${profile.following} following`
+                  : 'Profile metadata unavailable'}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Explicit distinction between unavailable data and zero activity */}
-        <div className="flex items-start gap-3 border border-[#a3a2a5] bg-[#f7f7f8] p-4 rounded-sm">
-          <Info
-            className="mt-0.5 h-4 w-4 shrink-0 text-[#ea580c]"
-            aria-hidden="true"
+        {/* Borderless Metro Data Availability Notice */}
+        <div className="flex items-start gap-3 bg-[#f2f2f3] p-4">
+          <MetroIcon
+            name="info"
+            className="mt-0.5 shrink-0 text-[15px] text-[#ea580c]"
           />
           <div className="space-y-1 text-xs leading-relaxed text-[#52525b]">
-            <p className="font-semibold text-[#111113]">
+            <p className="font-semibold text-[#18181b]">
               Data availability boundary
             </p>
             <p>{summary.availability.reason}</p>
@@ -214,17 +230,17 @@ export function ActivityView({
         </div>
       </section>
 
-      {/* Repository breakdown */}
+      {/* Repository breakdown: borderless Metro blocks */}
       <section
         aria-labelledby="repo-breakdown-heading"
-        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+        className="grid grid-cols-1 gap-2.5 lg:grid-cols-2"
       >
-        <div className="space-y-3 border border-[#e4e4e7] bg-white p-5 rounded-sm">
+        <div className="space-y-4 bg-[#f2f2f3] p-5">
           <h2
             id="repo-breakdown-heading"
-            className="text-sm font-semibold text-[#111113]"
+            className="text-lg font-light tracking-tight text-[#18181b]"
           >
-            Public Repository Languages
+            public repository languages
           </h2>
           {reposResult.status !== 'ok' && repos.length === 0 ? (
             <p className="text-xs text-[#52525b]">
@@ -236,13 +252,13 @@ export function ActivityView({
               Zero public repositories available to summarize.
             </p>
           ) : (
-            <ul className="divide-y divide-[#f1f1f3]">
+            <ul className="space-y-2.5">
               {languageStats.map((stat) => (
                 <li
                   key={stat.language}
-                  className="flex items-center justify-between py-2 text-xs"
+                  className="flex items-center justify-between text-xs"
                 >
-                  <span className="font-medium text-[#111113]">
+                  <span className="font-semibold text-[#18181b]">
                     {stat.language}
                   </span>
                   <span className="font-mono text-[#52525b] tabular-nums">
@@ -254,9 +270,9 @@ export function ActivityView({
           )}
         </div>
 
-        <div className="space-y-3 border border-[#e4e4e7] bg-white p-5 rounded-sm">
-          <h2 className="text-sm font-semibold text-[#111113]">
-            Repositories in Recent Public Events
+        <div className="space-y-4 bg-[#f2f2f3] p-5">
+          <h2 className="text-lg font-light tracking-tight text-[#18181b]">
+            repositories in recent public events
           </h2>
           {!eventsAvailable ? (
             <p className="text-xs text-[#52525b]">
@@ -269,20 +285,20 @@ export function ActivityView({
               days.
             </p>
           ) : (
-            <ul className="divide-y divide-[#f1f1f3]">
+            <ul className="space-y-2.5">
               {summary.activeRepos.slice(0, 8).map((item) => (
                 <li
                   key={item.repoName}
-                  className="flex flex-wrap items-center justify-between gap-2 py-2 text-xs"
+                  className="flex flex-wrap items-center justify-between gap-2 text-xs"
                 >
                   <a
                     href={`https://github.com/${item.repoName}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 font-mono font-medium text-[#111113] hover:text-[#ea580c]"
+                    className="inline-flex items-center gap-1 font-mono font-semibold text-[#18181b] hover:text-[#c2410c]"
                   >
                     <span>{item.repoName}</span>
-                    <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                    <MetroIcon name="arrow-up-right" className="text-[11px]" />
                   </a>
                   <span className="font-mono text-[#52525b] tabular-nums">
                     {item.eventCount} event{item.eventCount === 1 ? '' : 's'} ·{' '}
@@ -295,14 +311,14 @@ export function ActivityView({
         </div>
       </section>
 
-      {/* Public Events Timeline */}
+      {/* Public Events Timeline: Official Metro Unboxed ListView */}
       <section aria-labelledby="events-log-heading" className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2
             id="events-log-heading"
-            className="text-base font-semibold text-[#111113]"
+            className="text-2xl font-light tracking-tight text-[#18181b]"
           >
-            Public Event Log
+            public event log
           </h2>
 
           {summary.eventTypes.length > 0 && (
@@ -315,10 +331,10 @@ export function ActivityView({
                 type="button"
                 onClick={() => setEventFilter('all')}
                 aria-pressed={eventFilter === 'all'}
-                className={`min-h-[32px] border px-2.5 py-1 text-xs font-medium transition-colors rounded-sm whitespace-nowrap shrink-0 ${
+                className={`min-h-[34px] px-3 py-1 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                   eventFilter === 'all'
-                    ? 'border-[#111113] bg-[#111113] text-white'
-                    : 'border-[#e4e4e7] bg-white text-[#52525b] hover:border-[#a3a2a5]'
+                    ? 'bg-[#18181b] text-white'
+                    : 'bg-[#f2f2f3] text-[#52525b] hover:bg-[#e4e4e7] hover:text-[#18181b]'
                 }`}
               >
                 All ({events.length})
@@ -329,10 +345,10 @@ export function ActivityView({
                   type="button"
                   onClick={() => setEventFilter(et.type)}
                   aria-pressed={eventFilter === et.type}
-                  className={`min-h-[32px] border px-2.5 py-1 text-xs font-medium transition-colors rounded-sm whitespace-nowrap shrink-0 ${
+                  className={`min-h-[34px] px-3 py-1 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                     eventFilter === et.type
-                      ? 'border-[#ea580c] bg-[#ea580c] text-white'
-                      : 'border-[#e4e4e7] bg-white text-[#52525b] hover:border-[#a3a2a5]'
+                      ? 'bg-[#c2410c] text-white'
+                      : 'bg-[#f2f2f3] text-[#52525b] hover:bg-[#e4e4e7] hover:text-[#18181b]'
                   }`}
                 >
                   {et.label} ({et.count})
@@ -345,19 +361,16 @@ export function ActivityView({
         {isRefreshing ? (
           <div aria-busy="true" className="space-y-2">
             {[0, 1, 2, 3].map((idx) => (
-              <div
-                key={idx}
-                className="h-14 animate-pulse border border-[#e4e4e7] bg-[#f7f7f8] rounded-sm"
-              />
+              <div key={idx} className="h-14 animate-pulse bg-[#f2f2f3]" />
             ))}
           </div>
         ) : !eventsAvailable ? (
-          <div className="border border-[#e4e4e7] bg-white p-5 text-sm text-[#52525b] rounded-sm">
+          <div className="bg-[#f2f2f3] p-5 text-sm text-[#52525b]">
             Public events could not be fetched from GitHub. This reflects an API
             fetch or rate-limit failure rather than zero activity.
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div className="border border-[#e4e4e7] bg-white p-5 text-sm text-[#52525b] rounded-sm">
+          <div className="bg-[#f2f2f3] p-5 text-sm text-[#52525b]">
             {events.length === 0
               ? 'GitHub returned 0 public events in the last 90 days for this account.'
               : 'No events match the selected event type filter.'}
@@ -365,16 +378,16 @@ export function ActivityView({
         ) : (
           <ul
             data-testid="public-events-list"
-            className="divide-y divide-[#e4e4e7] border border-[#e4e4e7] bg-white rounded-sm"
+            className="space-y-2"
           >
             {filteredEvents.slice(0, 40).map((event) => (
               <li
                 key={event.id}
-                className="flex flex-col gap-1.5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-1.5 bg-[#f2f2f3] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="space-y-0.5 min-w-0">
                   <div className="flex flex-wrap items-baseline gap-2 text-xs">
-                    <span className="font-semibold text-[#ea580c]">
+                    <span className="font-semibold text-[#c2410c]">
                       {humanizeEventType(event.type)}
                     </span>
                     <span aria-hidden="true" className="text-[#a3a2a5]">
@@ -384,12 +397,12 @@ export function ActivityView({
                       href={event.repoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono font-medium text-[#111113] hover:underline break-all"
+                      className="font-mono font-semibold text-[#18181b] hover:underline break-all"
                     >
                       {event.repoName}
                     </a>
                   </div>
-                  <p className="text-sm text-[#52525b]">{event.summary}</p>
+                  <p className="text-sm text-[#3f3f46]">{event.summary}</p>
                 </div>
 
                 <span className="font-mono text-xs text-[#52525b] tabular-nums shrink-0">

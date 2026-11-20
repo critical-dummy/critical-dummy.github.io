@@ -129,7 +129,7 @@ export const siteConfig: SiteConfig = {
         heading: 'Developer Profile',
         paragraphs: [
           'critical-dummy is an independent developer working across TypeScript, C++, and web platform runtimes. The public repository archive spans browser-based simulation, compatibility layers, OS interface concepts, and compact terminal utilities.',
-          'Rather than optimizing for polished marketing wrappers, most work here starts as a direct technical question—testing how a runtime behaves, how low-level mechanics translate across platforms, or how a browser environment can feel like a focused tool.',
+          'Rather than optimizing for polished marketing wrappers, most work here starts as a direct technical question: testing how a runtime behaves, how low-level mechanics translate across platforms, or how a browser environment can feel like a focused tool.',
         ],
       },
       {

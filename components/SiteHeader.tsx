@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { MetroIcon } from '@/components/MetroIcon';
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 
@@ -29,25 +29,25 @@ export function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[#e4e4e7] bg-white/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 bg-white">
       <div
         className={cn(
-          'mx-auto flex h-14 items-center justify-between gap-8 px-4 sm:px-6',
+          'mx-auto flex h-16 items-center justify-between gap-8 px-4 sm:px-6',
           siteConfig.layout.maxWidthClass
         )}
       >
-        {/* Zone 1: Single-line brand wordmark */}
+        {/* Zone 1: Metro workspace title */}
         <Link
           href="/"
-          className="font-mono text-sm font-semibold tracking-tight text-[#111113] transition-colors hover:text-[#ea580c] whitespace-nowrap shrink-0"
+          className="font-mono text-sm font-semibold tracking-tight text-[#18181b] transition-colors hover:text-[#ea580c] whitespace-nowrap shrink-0"
         >
           {siteConfig.identity.handle}
         </Link>
 
-        {/* Zone 2: Primary single-line navigation */}
+        {/* Zone 2: Official Metro Pivot navigation (active dark, inactive muted, lowercase) */}
         <nav
           aria-label="Primary navigation"
-          className="hidden md:flex items-center gap-6"
+          className="hidden md:flex items-baseline gap-7"
         >
           {siteConfig.navigation.map((item) => {
             const active = isActive(item.href);
@@ -57,13 +57,13 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'relative py-4 text-sm font-medium transition-colors whitespace-nowrap shrink-0',
+                  'relative py-2 text-lg font-light tracking-tight transition-colors whitespace-nowrap shrink-0',
                   active
-                    ? 'text-[#111113]'
-                    : 'text-[#52525b] hover:text-[#111113]'
+                    ? 'font-normal text-[#18181b]'
+                    : 'text-[#737276] hover:text-[#18181b]'
                 )}
               >
-                {item.label}
+                {item.label.toLowerCase()}
                 {active && (
                   <span
                     aria-hidden="true"
@@ -75,16 +75,17 @@ export function SiteHeader() {
           })}
         </nav>
 
-        {/* Zone 3: Single primary external action + mobile menu trigger */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Zone 3: Official Metro 2px outline action button + mobile trigger */}
+        <div className="flex items-center gap-2 shrink-0">
           <a
             href={siteConfig.identity.githubUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 border border-[#111113] bg-[#111113] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:border-[#ea580c] hover:bg-[#ea580c] rounded-sm whitespace-nowrap shrink-0"
+            className="hidden sm:inline-flex items-center gap-1.5 border-2 border-[#18181b] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white whitespace-nowrap shrink-0"
           >
+            <MetroIcon name="github" className="text-[13px]" />
             <span>GitHub</span>
-            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+            <MetroIcon name="arrow-up-right" className="text-[11px]" />
           </a>
 
           <button
@@ -95,12 +96,12 @@ export function SiteHeader() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation-drawer"
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            className="inline-flex h-10 w-10 items-center justify-center border border-[#e4e4e7] bg-white text-[#111113] transition-colors hover:border-[#a3a2a5] md:hidden rounded-sm shrink-0"
+            className="inline-flex h-10 w-10 items-center justify-center bg-[#f2f2f3] text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white md:hidden shrink-0"
           >
             {mobileOpen ? (
-              <X className="h-4 w-4" aria-hidden="true" />
+              <MetroIcon name="cross" className="text-[14px]" />
             ) : (
-              <Menu className="h-4 w-4" aria-hidden="true" />
+              <MetroIcon name="menu" className="text-[16px]" />
             )}
           </button>
         </div>
@@ -110,9 +111,9 @@ export function SiteHeader() {
         <nav
           id="mobile-navigation-drawer"
           aria-label="Mobile navigation"
-          className="border-t border-[#e4e4e7] bg-[#f7f7f8] px-4 py-3 md:hidden"
+          className="bg-[#18181b] px-4 py-4 text-white md:hidden"
         >
-          <ul className="flex flex-col divide-y divide-[#e4e4e7]">
+          <ul className="flex flex-col gap-1">
             {siteConfig.navigation.map((item) => {
               const active = isActive(item.href);
               return (
@@ -122,16 +123,13 @@ export function SiteHeader() {
                     onClick={() => setOpenPathname(null)}
                     aria-current={active ? 'page' : undefined}
                     className={cn(
-                      'flex min-h-[44px] items-center justify-between py-2 text-sm font-medium transition-colors',
-                      active ? 'text-[#ea580c]' : 'text-[#111113]'
+                      'flex min-h-[44px] items-center justify-between px-3 py-2 text-lg font-light transition-colors',
+                      active
+                        ? 'bg-[#c2410c] font-normal text-white'
+                        : 'text-[#d4d4d8] hover:bg-[#27272a] hover:text-white'
                     )}
                   >
-                    <span>{item.label}</span>
-                    {active && (
-                      <span className="font-mono text-xs text-[#ea580c]">
-                        Active
-                      </span>
-                    )}
+                    <span>{item.label.toLowerCase()}</span>
                   </Link>
                 </li>
               );
@@ -141,10 +139,13 @@ export function SiteHeader() {
                 href={siteConfig.identity.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-[44px] items-center justify-between py-2 text-sm font-semibold text-[#111113]"
+                className="flex min-h-[44px] items-center justify-between border-2 border-white px-3 py-2 text-sm font-semibold text-white"
               >
-                <span>GitHub Profile</span>
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                <span className="inline-flex items-center gap-2">
+                  <MetroIcon name="github" className="text-[15px]" />
+                  <span>GitHub Profile</span>
+                </span>
+                <MetroIcon name="arrow-up-right" className="text-[13px]" />
               </a>
             </li>
           </ul>

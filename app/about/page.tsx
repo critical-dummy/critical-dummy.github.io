@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
 import { AvatarFrame } from '@/components/AvatarFrame';
 import { DataStatusBanner } from '@/components/DataStatusBanner';
+import { MetroIcon } from '@/components/MetroIcon';
 import { MotionSection } from '@/components/MotionSection';
 import { siteConfig } from '@/config/site';
 import { getGitHubProfile } from '@/lib/github';
@@ -23,12 +23,12 @@ export default async function AboutPage() {
   const profile = profileResult.data;
 
   return (
-    <MotionSection className="space-y-8">
-      <header className="space-y-2 border-b border-[#e4e4e7] pb-5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#111113]">
-          About
+    <MotionSection className="space-y-10">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-light tracking-tight text-[#18181b] sm:text-4xl">
+          about
         </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-[#52525b]">
+        <p className="max-w-2xl text-[15px] leading-relaxed text-[#52525b]">
           {siteConfig.about.lead}
         </p>
       </header>
@@ -42,8 +42,8 @@ export default async function AboutPage() {
       )}
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
-        {/* Profile summary column */}
-        <aside className="space-y-5 border border-[#e4e4e7] bg-[#f7f7f8] p-5 lg:col-span-4 rounded-sm">
+        {/* Borderless Charcoal Metro Profile Summary Tile */}
+        <aside className="space-y-6 bg-[#18181b] p-6 text-white lg:col-span-4">
           <div className="flex items-center gap-3.5">
             <AvatarFrame
               src={profile?.avatarUrl}
@@ -52,43 +52,43 @@ export default async function AboutPage() {
               size={56}
             />
             <div className="min-w-0">
-              <p className="font-mono text-sm font-semibold text-[#111113]">
+              <p className="font-mono text-sm font-semibold text-white">
                 {profile?.login ?? siteConfig.identity.githubUsername}
               </p>
-              <p className="text-xs text-[#52525b]">
+              <p className="text-xs text-[#a3a2a5]">
                 {profile?.name ?? siteConfig.identity.title}
               </p>
             </div>
           </div>
 
-          <dl className="space-y-2.5 border-t border-[#e4e4e7] pt-4 text-xs">
+          <dl className="space-y-2.5 text-xs">
             <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-[#52525b]">Public repos</dt>
-              <dd className="font-mono text-[#111113] tabular-nums">
+              <dt className="text-[#a3a2a5]">Public repos</dt>
+              <dd className="font-mono font-semibold text-[#fb923c] tabular-nums">
                 {profile ? profile.publicRepos : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-[#52525b]">Followers</dt>
-              <dd className="font-mono text-[#111113] tabular-nums">
+              <dt className="text-[#a3a2a5]">Followers</dt>
+              <dd className="font-mono text-white tabular-nums">
                 {profile ? profile.followers : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-[#52525b]">Following</dt>
-              <dd className="font-mono text-[#111113] tabular-nums">
+              <dt className="text-[#a3a2a5]">Following</dt>
+              <dd className="font-mono text-white tabular-nums">
                 {profile ? profile.following : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-[#52525b]">Account created</dt>
-              <dd className="font-mono text-[#111113] tabular-nums">
+              <dt className="text-[#a3a2a5]">Account created</dt>
+              <dd className="font-mono text-white tabular-nums">
                 {profile ? formatUtcDate(profile.createdAt) : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-[#52525b]">Location</dt>
-              <dd className="font-mono text-[#111113]">
+              <dt className="text-[#a3a2a5]">Location</dt>
+              <dd className="font-mono text-white">
                 {profileResult.status === 'ok'
                   ? (profile?.location ?? 'Not specified')
                   : 'Unavailable'}
@@ -96,45 +96,45 @@ export default async function AboutPage() {
             </div>
           </dl>
 
-          <div className="flex flex-col gap-2 border-t border-[#e4e4e7] pt-4">
+          <div className="flex flex-col gap-2.5 pt-1">
             <a
               href={profile?.htmlUrl ?? siteConfig.identity.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[40px] items-center justify-between border border-[#111113] bg-white px-3 py-2 text-xs font-semibold text-[#111113] transition-colors hover:bg-[#111113] hover:text-white rounded-sm"
+              className="metro-tile inline-flex min-h-[40px] items-center justify-between bg-[#c2410c] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#ea580c]"
             >
               <span>View GitHub Profile</span>
-              <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+              <MetroIcon name="arrow-up-right" className="text-[12px]" />
             </a>
             <Link
               href="/projects"
-              className="inline-flex min-h-[40px] items-center justify-between border border-[#e4e4e7] bg-white px-3 py-2 text-xs font-medium text-[#111113] transition-colors hover:border-[#a3a2a5] rounded-sm"
+              className="metro-tile inline-flex min-h-[40px] items-center justify-between border-2 border-white bg-transparent px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-white hover:text-[#18181b]"
             >
               <span>Inspect Repositories</span>
-              <span aria-hidden="true">→</span>
+              <MetroIcon name="arrow-right" className="text-[12px]" />
             </Link>
           </div>
         </aside>
 
-        {/* Editable profile & philosophy sections */}
-        <div className="space-y-8 lg:col-span-8">
+        {/* Borderless Whitespace-Driven Metro Prose Sections */}
+        <div className="space-y-10 lg:col-span-8">
           {siteConfig.about.sections.map((section) => (
             <section
               key={section.id}
               aria-labelledby={`about-${section.id}`}
-              className="space-y-3 border-b border-[#e4e4e7] pb-6 last:border-b-0 last:pb-0"
+              className="space-y-3"
             >
               <h2
                 id={`about-${section.id}`}
-                className="text-base font-semibold text-[#111113]"
+                className="text-2xl font-light tracking-tight text-[#18181b]"
               >
-                {section.heading}
+                {section.heading.toLowerCase()}
               </h2>
               <div className="space-y-3">
                 {section.paragraphs.map((paragraph, idx) => (
                   <p
                     key={idx}
-                    className="max-w-2xl text-sm leading-relaxed text-[#52525b]"
+                    className="max-w-2xl text-[15px] leading-relaxed text-[#3f3f46]"
                   >
                     {paragraph}
                   </p>

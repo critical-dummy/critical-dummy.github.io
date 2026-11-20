@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { RefreshCw, Search, X } from 'lucide-react';
 import {
   extractLanguages,
   filterAndSortRepos,
@@ -14,7 +13,15 @@ import type {
   RepoSourceFilter,
 } from '@/lib/github-types';
 import { DataStatusBanner } from './DataStatusBanner';
+import { MetroIcon } from './MetroIcon';
+import { MetroSelect, type MetroSelectOption } from './MetroSelect';
 import { RepoRow } from './RepoRow';
+
+const SORT_OPTIONS: readonly MetroSelectOption<RepoSortOption>[] = [
+  { value: 'updated', label: 'Recently updated' },
+  { value: 'stars', label: 'Most starred' },
+  { value: 'name', label: 'Name (A–Z)' },
+];
 
 interface ProjectsExplorerProps {
   initialResult: GitHubResult<GitHubRepo[]>;
@@ -83,20 +90,20 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
 
   return (
     <div className="space-y-6">
-      {/* Controls Bar */}
-      <div className="space-y-4 border border-[#e4e4e7] bg-[#f7f7f8] p-4 rounded-sm">
+      {/* Official Metro Command & Filter Strip (2px inputs, flat segmented toggles) */}
+      <div className="space-y-4 bg-[#f2f2f3] p-5">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-12 lg:items-end">
           <div className="md:col-span-2 lg:col-span-5">
             <label
               htmlFor="repo-search-input"
-              className="mb-1.5 block text-xs font-semibold text-[#111113]"
+              className="mb-1.5 block text-xs font-semibold text-[#18181b]"
             >
               Filter repositories
             </label>
-            <div className="relative flex items-center">
-              <Search
-                className="pointer-events-none absolute left-3 h-4 w-4 text-[#52525b]"
-                aria-hidden="true"
+            <div className="flex h-10 w-full items-center gap-2.5 border-2 border-[#a3a2a5] bg-white px-3 focus-within:border-[#18181b]">
+              <MetroIcon
+                name="search"
+                className="shrink-0 text-[14px] text-[#52525b]"
               />
               <input
                 id="repo-search-input"
@@ -104,16 +111,16 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by name, description, or language..."
-                className="h-10 w-full border border-[#e4e4e7] bg-white pl-9 pr-9 text-sm text-[#111113] placeholder:text-[#71717a] rounded-sm"
+                className="h-full w-full min-w-0 bg-transparent text-sm text-[#18181b] placeholder:text-[#71717a] focus:outline-none [&::-webkit-search-cancel-button]:appearance-none"
               />
               {query.length > 0 && (
                 <button
                   type="button"
                   onClick={() => setQuery('')}
                   aria-label="Clear repository search"
-                  className="absolute right-2 inline-flex h-7 w-7 items-center justify-center text-[#52525b] hover:text-[#111113]"
+                  className="inline-flex h-6 w-6 shrink-0 items-center justify-center text-[#52525b] hover:text-[#18181b]"
                 >
-                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  <MetroIcon name="cross" className="text-[11px]" />
                 </button>
               )}
             </div>
@@ -121,28 +128,26 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
 
           <div className="lg:col-span-3">
             <label
+              id="repo-sort-label"
               htmlFor="repo-sort-select"
-              className="mb-1.5 block text-xs font-semibold text-[#111113]"
+              className="mb-1.5 block text-xs font-semibold text-[#18181b]"
             >
               Sort order
             </label>
-            <select
+            <MetroSelect
               id="repo-sort-select"
+              labelId="repo-sort-label"
               value={sort}
-              onChange={(e) => setSort(e.target.value as RepoSortOption)}
-              className="h-10 w-full border border-[#e4e4e7] bg-white pl-3 pr-8 text-sm text-[#111113] rounded-sm"
-            >
-              <option value="updated">Recently updated</option>
-              <option value="stars">Most starred</option>
-              <option value="name">Name (A–Z)</option>
-            </select>
+              options={SORT_OPTIONS}
+              onChange={setSort}
+            />
           </div>
 
           <div className="lg:col-span-4 flex flex-wrap items-end justify-between gap-2 sm:flex-nowrap lg:justify-end">
             <div
               role="group"
               aria-label="Repository source filter"
-              className="inline-flex h-10 border border-[#e4e4e7] bg-white p-0.5 rounded-sm"
+              className="inline-flex h-10 bg-white"
             >
               {(
                 [
@@ -158,10 +163,10 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
                     type="button"
                     onClick={() => setSource(option.id)}
                     aria-pressed={active}
-                    className={`px-3 text-xs font-medium transition-colors rounded-sm whitespace-nowrap shrink-0 ${
+                    className={`px-3 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                       active
-                        ? 'bg-[#111113] text-white'
-                        : 'text-[#52525b] hover:text-[#111113]'
+                        ? 'bg-[#18181b] text-white'
+                        : 'text-[#52525b] hover:bg-[#e4e4e7] hover:text-[#18181b]'
                     }`}
                   >
                     {option.label}
@@ -175,31 +180,31 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
               onClick={handleRefresh}
               disabled={isRefreshing}
               aria-label="Refresh repositories from GitHub"
-              className="inline-flex h-10 items-center gap-1.5 border border-[#e4e4e7] bg-white px-3 text-xs font-semibold text-[#111113] transition-colors hover:border-[#a3a2a5] disabled:opacity-50 rounded-sm whitespace-nowrap shrink-0"
+              className="inline-flex h-10 items-center gap-1.5 border-2 border-[#18181b] bg-white px-3.5 text-xs font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white disabled:opacity-50 whitespace-nowrap shrink-0"
             >
-              <RefreshCw
-                className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`}
-                aria-hidden="true"
+              <MetroIcon
+                name="loop2"
+                className={`text-[13px] ${isRefreshing ? 'animate-spin' : ''}`}
               />
               <span>{isRefreshing ? 'Syncing' : 'Refresh'}</span>
             </button>
           </div>
         </div>
 
-        {/* Language filter bar */}
+        {/* Language Pivot filter buttons */}
         {languages.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 border-t border-[#e4e4e7] pt-3">
-            <span className="mr-1 text-xs font-medium text-[#52525b]">
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <span className="mr-1 text-xs font-semibold text-[#52525b]">
               Language:
             </span>
             <button
               type="button"
               onClick={() => setLanguage('all')}
               aria-pressed={language === 'all'}
-              className={`min-h-[32px] border px-2.5 py-1 text-xs font-medium transition-colors rounded-sm whitespace-nowrap shrink-0 ${
+              className={`min-h-[34px] px-3 py-1 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                 language === 'all'
-                  ? 'border-[#111113] bg-[#111113] text-white'
-                  : 'border-[#e4e4e7] bg-white text-[#52525b] hover:border-[#a3a2a5] hover:text-[#111113]'
+                  ? 'bg-[#18181b] text-white'
+                  : 'bg-white text-[#52525b] hover:bg-[#e4e4e7] hover:text-[#18181b]'
               }`}
             >
               All ({repos.length})
@@ -212,10 +217,10 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
                   type="button"
                   onClick={() => setLanguage(item.language)}
                   aria-pressed={active}
-                  className={`min-h-[32px] border px-2.5 py-1 text-xs font-medium transition-colors rounded-sm whitespace-nowrap shrink-0 ${
+                  className={`min-h-[34px] px-3 py-1 text-xs font-semibold transition-colors whitespace-nowrap shrink-0 ${
                     active
-                      ? 'border-[#ea580c] bg-[#ea580c] text-white'
-                      : 'border-[#e4e4e7] bg-white text-[#52525b] hover:border-[#a3a2a5] hover:text-[#111113]'
+                      ? 'bg-[#c2410c] text-white'
+                      : 'bg-white text-[#52525b] hover:bg-[#e4e4e7] hover:text-[#18181b]'
                   }`}
                 >
                   {item.language} ({item.count})
@@ -250,28 +255,25 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
         <div
           aria-busy="true"
           aria-label="Refreshing repositories"
-          className="grid grid-cols-1 gap-3 md:grid-cols-2"
+          className="grid grid-cols-1 gap-2.5 md:grid-cols-2"
         >
           {[0, 1, 2, 3].map((slot) => (
-            <div
-              key={slot}
-              className="h-36 animate-pulse border border-[#e4e4e7] bg-[#f7f7f8] p-4 rounded-sm"
-            />
+            <div key={slot} className="h-40 animate-pulse bg-[#f2f2f3] p-5" />
           ))}
         </div>
       ) : result.status !== 'ok' && repos.length === 0 ? (
-        <div className="border border-[#e4e4e7] bg-white p-6 text-sm text-[#52525b] rounded-sm">
+        <div className="bg-[#f2f2f3] p-6 text-sm text-[#52525b]">
           Repository list could not be loaded from GitHub. Use the retry action
           above once network access or the GitHub API rate-limit window is
           available.
         </div>
       ) : repos.length === 0 ? (
-        <div className="border border-[#e4e4e7] bg-white p-6 text-sm text-[#52525b] rounded-sm">
+        <div className="bg-[#f2f2f3] p-6 text-sm text-[#52525b]">
           This GitHub account currently has 0 public repositories.
         </div>
       ) : filteredRepos.length === 0 ? (
-        <div className="flex flex-col items-start gap-3 border border-[#e4e4e7] bg-[#f7f7f8] p-6 rounded-sm">
-          <p className="text-sm font-semibold text-[#111113]">
+        <div className="flex flex-col items-start gap-3 bg-[#f2f2f3] p-6">
+          <p className="text-sm font-semibold text-[#18181b]">
             No repositories match the current filters.
           </p>
           <p className="text-xs text-[#52525b]">
@@ -282,7 +284,7 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
             <button
               type="button"
               onClick={handleClearFilters}
-              className="inline-flex min-h-[40px] items-center border border-[#111113] bg-white px-4 py-2 text-xs font-semibold text-[#111113] transition-colors hover:bg-[#111113] hover:text-white rounded-sm"
+              className="inline-flex min-h-[40px] items-center border-2 border-[#18181b] bg-white px-4 py-1.5 text-xs font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white"
             >
               Clear filters
             </button>
@@ -291,10 +293,10 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
       ) : (
         <div
           data-testid="repositories-grid"
-          className="grid grid-cols-1 gap-3 md:grid-cols-2"
+          className="grid grid-cols-1 gap-2.5 md:grid-cols-2"
         >
           {filteredRepos.map((repo) => (
-            <RepoRow key={repo.id} repo={repo} />
+            <RepoRow key={repo.id} repo={repo} variant="light" />
           ))}
         </div>
       )}

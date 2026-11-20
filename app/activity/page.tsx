@@ -25,14 +25,14 @@ export default async function ActivityPage() {
   ]);
 
   return (
-    <MotionSection className="space-y-6">
-      <header className="space-y-2 border-b border-[#e4e4e7] pb-5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#111113]">
-          GitHub Activity
+    <MotionSection className="space-y-8">
+      <header className="space-y-2">
+        <h1 className="text-3xl font-light tracking-tight text-[#18181b] sm:text-4xl">
+          github activity
         </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-[#52525b]">
+        <p className="max-w-2xl text-[15px] leading-relaxed text-[#52525b]">
           Live public repository and event information from GitHub for{' '}
-          <span className="font-mono font-medium text-[#111113]">
+          <span className="font-mono font-semibold text-[#18181b]">
             {username}
           </span>
           . Unavailable metrics are explicitly labeled so missing data is never

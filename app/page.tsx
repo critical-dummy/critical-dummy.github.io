@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { AvatarFrame } from '@/components/AvatarFrame';
 import { DataStatusBanner } from '@/components/DataStatusBanner';
+import { MetroIcon } from '@/components/MetroIcon';
 import { MotionSection } from '@/components/MotionSection';
 import { RepoRow } from '@/components/RepoRow';
 import { siteConfig } from '@/config/site';
@@ -25,64 +25,67 @@ export default async function HomePage() {
   );
 
   return (
-    <MotionSection className="space-y-12">
-      {/* Identity & Introduction */}
+    <MotionSection className="space-y-14">
+      {/* Metro Hub Identity & Live Profile */}
       <section
         aria-labelledby="home-identity-heading"
-        className="grid grid-cols-1 gap-8 border-b border-[#e4e4e7] pb-10 lg:grid-cols-12 lg:items-start"
+        className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-stretch"
       >
-        <div className="space-y-5 lg:col-span-8">
-          <div className="flex items-start gap-4">
-            <AvatarFrame
-              src={profile?.avatarUrl}
-              alt={`${siteConfig.identity.handle} GitHub avatar`}
-              handle={siteConfig.identity.handle}
-              size={68}
-            />
-            <div className="space-y-1 min-w-0">
-              <h1
-                id="home-identity-heading"
-                className="text-2xl font-bold tracking-tight text-[#111113] sm:text-3xl [text-wrap:balance]"
-              >
-                {siteConfig.identity.title}
-              </h1>
-              <p className="text-sm font-medium text-[#52525b]">
-                {siteConfig.identity.subtitle}
-              </p>
-              {profile && (
-                <p className="font-mono text-xs text-[#52525b] tabular-nums">
-                  @{profile.login}
-                  {profile.name && profile.name !== profile.login
-                    ? ` · ${profile.name}`
-                    : ''}
-                  {' · '}
-                  {profile.publicRepos} public repositories
+        <div className="flex flex-col justify-between gap-7 lg:col-span-8">
+          <div className="space-y-5">
+            <div className="flex items-start gap-4">
+              <AvatarFrame
+                src={profile?.avatarUrl}
+                alt={`${siteConfig.identity.handle} GitHub avatar`}
+                handle={siteConfig.identity.handle}
+                size={72}
+              />
+              <div className="min-w-0 space-y-1">
+                <h1
+                  id="home-identity-heading"
+                  className="text-3xl font-light tracking-tight text-[#18181b] sm:text-4xl [text-wrap:balance]"
+                >
+                  {siteConfig.identity.title}
+                </h1>
+                <p className="text-sm font-semibold text-[#52525b]">
+                  {siteConfig.identity.subtitle}
                 </p>
-              )}
+                {profile && (
+                  <p className="font-mono text-xs text-[#52525b] tabular-nums">
+                    @{profile.login}
+                    {profile.name && profile.name !== profile.login
+                      ? ` · ${profile.name}`
+                      : ''}
+                    {' · '}
+                    {profile.publicRepos} public repositories
+                  </p>
+                )}
+              </div>
             </div>
+
+            <p className="max-w-2xl text-[15px] leading-relaxed text-[#27272a]">
+              {siteConfig.identity.introduction}
+            </p>
           </div>
 
-          <p className="max-w-2xl text-base leading-relaxed text-[#111113]">
-            {siteConfig.identity.introduction}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-1">
+          <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/projects"
-              className="inline-flex min-h-[42px] items-center gap-2 border border-[#111113] bg-[#111113] px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-[#ea580c] hover:bg-[#ea580c] rounded-sm whitespace-nowrap shrink-0"
+              className="metro-tile inline-flex min-h-[42px] items-center gap-2 bg-[#18181b] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#c2410c] whitespace-nowrap shrink-0"
             >
               <span>Browse Projects</span>
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <MetroIcon name="arrow-right" className="text-[14px]" />
             </Link>
 
             <a
               href={profile?.htmlUrl ?? siteConfig.identity.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[42px] items-center gap-1.5 border border-[#e4e4e7] bg-white px-4 py-2 text-sm font-medium text-[#111113] transition-colors hover:border-[#a3a2a5] rounded-sm whitespace-nowrap shrink-0"
+              className="metro-tile inline-flex min-h-[42px] items-center gap-1.5 border-2 border-[#18181b] bg-white px-4 py-2 text-sm font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white whitespace-nowrap shrink-0"
             >
+              <MetroIcon name="github" className="text-[14px]" />
               <span>GitHub Profile</span>
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              <MetroIcon name="arrow-up-right" className="text-[12px]" />
             </a>
 
             {profile?.blog && (
@@ -90,120 +93,80 @@ export default async function HomePage() {
                 href={profile.blog}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[42px] items-center gap-1.5 border border-[#e4e4e7] bg-white px-4 py-2 text-sm font-medium text-[#111113] transition-colors hover:border-[#a3a2a5] rounded-sm whitespace-nowrap shrink-0"
+                className="metro-tile inline-flex min-h-[42px] items-center gap-1.5 border-2 border-[#18181b] bg-white px-4 py-2 text-sm font-semibold text-[#18181b] transition-colors hover:bg-[#18181b] hover:text-white whitespace-nowrap shrink-0"
               >
                 <span>Nekoweb</span>
-                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                <MetroIcon name="arrow-up-right" className="text-[12px]" />
               </a>
             )}
           </div>
         </div>
 
-        {/* Right summary box: live GitHub metadata without fabricated stats */}
+        {/* Borderless Charcoal Metro Summary Tile */}
         <aside
           aria-label="Account index"
-          className="border border-[#e4e4e7] bg-[#f7f7f8] p-5 lg:col-span-4 rounded-sm"
+          className="flex flex-col justify-between gap-6 bg-[#18181b] p-5 text-white lg:col-span-4"
         >
-          <h2 className="border-b border-[#e4e4e7] pb-2.5 text-xs font-semibold text-[#111113]">
-            Public GitHub Record
-          </h2>
-          <dl className="mt-3 space-y-2.5 text-xs">
+          <dl className="space-y-2.5 text-xs">
             <div className="flex items-baseline justify-between gap-4">
-              <dt className="text-[#52525b]">Handle</dt>
-              <dd className="font-mono font-medium text-[#111113]">
+              <dt className="text-[#a3a2a5]">Handle</dt>
+              <dd className="font-mono font-semibold text-white">
                 {profile?.login ?? siteConfig.identity.githubUsername}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4">
-              <dt className="text-[#52525b]">GitHub bio</dt>
-              <dd className="font-mono text-[#111113]">
+              <dt className="text-[#a3a2a5]">GitHub bio</dt>
+              <dd className="font-mono text-white">
                 {profileResult.status === 'ok'
                   ? (profile?.bio ?? 'None set')
                   : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4">
-              <dt className="text-[#52525b]">Repositories</dt>
-              <dd className="font-mono text-[#111113] tabular-nums">
+              <dt className="text-[#a3a2a5]">Repositories</dt>
+              <dd className="font-mono font-semibold text-[#fb923c] tabular-nums">
                 {profileResult.status === 'ok' && profile
                   ? profile.publicRepos
                   : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4">
-              <dt className="text-[#52525b]">Joined</dt>
-              <dd className="font-mono text-[#111113] tabular-nums">
+              <dt className="text-[#a3a2a5]">Joined</dt>
+              <dd className="font-mono text-white tabular-nums">
                 {profileResult.status === 'ok' && profile
                   ? formatUtcDate(profile.createdAt)
                   : 'Unavailable'}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4">
-              <dt className="text-[#52525b]">Pages host</dt>
-              <dd className="font-mono text-[#111113]">
+              <dt className="text-[#a3a2a5]">Pages host</dt>
+              <dd className="font-mono text-white">
                 {siteConfig.domains.githubPages}
               </dd>
             </div>
           </dl>
+
+          <h2 className="text-sm font-semibold text-white">
+            public github record
+          </h2>
         </aside>
       </section>
 
-      {/* Current Interests & Development Fields */}
-      <section aria-labelledby="interests-heading" className="space-y-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2
-            id="interests-heading"
-            className="text-lg font-semibold tracking-tight text-[#111113]"
-          >
-            Current Interests & Development Fields
-          </h2>
-          <Link
-            href="/about"
-            className="text-xs font-semibold text-[#52525b] underline decoration-[#a3a2a5] underline-offset-4 transition-colors hover:text-[#ea580c]"
-          >
-            Read full profile
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          {siteConfig.interests.map((field) => (
-            <div
-              key={field.title}
-              className="flex flex-col justify-between gap-3 border border-[#e4e4e7] bg-white p-5 rounded-sm"
-            >
-              <div className="space-y-1.5">
-                <h3 className="text-sm font-semibold text-[#111113]">
-                  {field.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-[#52525b]">
-                  {field.summary}
-                </p>
-              </div>
-              {field.relatedRepos.length > 0 && (
-                <p className="border-t border-[#f1f1f3] pt-2.5 font-mono text-xs text-[#52525b]">
-                  Related: {field.relatedRepos.join(' · ')}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Selected Projects (live from GitHub) */}
+      {/* Selected Projects: Borderless Metro Live Tile Grid */}
       <section aria-labelledby="selected-projects-heading" className="space-y-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2
             id="selected-projects-heading"
-            className="text-lg font-semibold tracking-tight text-[#111113]"
+            className="text-2xl font-light tracking-tight text-[#18181b] sm:text-3xl"
           >
-            Selected Projects
+            selected projects
           </h2>
           <Link
             href="/projects"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-[#ea580c] transition-colors hover:text-[#c2410c]"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#c2410c] transition-colors hover:text-[#18181b]"
           >
             <span>View all public repositories</span>
-            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            <MetroIcon name="arrow-right" className="text-[12px]" />
           </Link>
         </div>
 
@@ -214,74 +177,112 @@ export default async function HomePage() {
             rateLimit={reposResult.rateLimit}
           />
         ) : selectedRepos.length === 0 ? (
-          <div className="border border-[#e4e4e7] bg-[#f7f7f8] p-5 text-sm text-[#52525b] rounded-sm">
+          <div className="bg-[#f2f2f3] p-5 text-sm text-[#52525b]">
             No public repositories returned by GitHub for this account.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {selectedRepos.map((repo) => (
-              <RepoRow key={repo.id} repo={repo} compact />
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+            {selectedRepos.map((repo, index) => (
+              <RepoRow
+                key={repo.id}
+                repo={repo}
+                compact
+                variant={index === 0 ? 'charcoal' : 'light'}
+              />
             ))}
           </div>
         )}
       </section>
 
-      {/* Direct Platform & Section Links */}
-      <section
-        aria-labelledby="workspace-links-heading"
-        className="border-t border-[#e4e4e7] pt-8"
-      >
+      {/* Current Interests: Borderless Typographic Columns */}
+      <section aria-labelledby="interests-heading" className="space-y-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2
+            id="interests-heading"
+            className="text-2xl font-light tracking-tight text-[#18181b] sm:text-3xl"
+          >
+            development fields
+          </h2>
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#52525b] transition-colors hover:text-[#c2410c]"
+          >
+            <span>Read full profile</span>
+            <MetroIcon name="arrow-right" className="text-[12px]" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2">
+          {siteConfig.interests.map((field) => (
+            <div
+              key={field.title}
+              className="flex flex-col justify-between gap-2.5"
+            >
+              <div className="space-y-1.5">
+                <h3 className="text-[15px] font-semibold text-[#18181b]">
+                  {field.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-[#52525b]">
+                  {field.summary}
+                </p>
+              </div>
+              {field.relatedRepos.length > 0 && (
+                <p className="font-mono text-xs text-[#52525b]">
+                  {field.relatedRepos.join(' · ')}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Workspace Navigation Tiles: Bottom-Left Labels */}
+      <section aria-labelledby="workspace-links-heading" className="space-y-4">
         <h2
           id="workspace-links-heading"
-          className="mb-4 text-sm font-semibold text-[#111113]"
+          className="text-2xl font-light tracking-tight text-[#18181b] sm:text-3xl"
         >
-          Workspace Sections & External Links
+          workspace
         </h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/projects"
-            className="flex flex-col justify-between gap-2 border border-[#e4e4e7] bg-[#f7f7f8] p-4 transition-colors hover:border-[#a3a2a5] rounded-sm"
+            className="metro-tile flex min-h-[132px] flex-col justify-between bg-[#c2410c] p-5 text-white hover:bg-[#ea580c]"
           >
-            <span className="text-sm font-semibold text-[#111113]">
-              Projects
-            </span>
-            <span className="text-xs text-[#52525b]">
+            <span className="text-xs leading-relaxed text-[#ffedd5]">
               Filter and sort all public repositories.
             </span>
+            <span className="text-base font-semibold">Projects</span>
           </Link>
 
           <Link
             href="/activity"
-            className="flex flex-col justify-between gap-2 border border-[#e4e4e7] bg-[#f7f7f8] p-4 transition-colors hover:border-[#a3a2a5] rounded-sm"
+            className="metro-tile flex min-h-[132px] flex-col justify-between bg-[#f2f2f3] p-5 text-[#18181b] hover:bg-[#e7e7ea]"
           >
-            <span className="text-sm font-semibold text-[#111113]">
-              GitHub Activity
+            <span className="text-xs leading-relaxed text-[#52525b]">
+              Recent public events and availability scope.
             </span>
-            <span className="text-xs text-[#52525b]">
-              Recent public events and data availability scope.
-            </span>
+            <span className="text-base font-semibold">GitHub Activity</span>
           </Link>
 
           <Link
             href="/about"
-            className="flex flex-col justify-between gap-2 border border-[#e4e4e7] bg-[#f7f7f8] p-4 transition-colors hover:border-[#a3a2a5] rounded-sm"
+            className="metro-tile flex min-h-[132px] flex-col justify-between bg-[#f2f2f3] p-5 text-[#18181b] hover:bg-[#e7e7ea]"
           >
-            <span className="text-sm font-semibold text-[#111113]">About</span>
-            <span className="text-xs text-[#52525b]">
-              Background, technical interests, and philosophy.
+            <span className="text-xs leading-relaxed text-[#52525b]">
+              Profile, technical interests, and philosophy.
             </span>
+            <span className="text-base font-semibold">About</span>
           </Link>
 
           <Link
             href="/contact"
-            className="flex flex-col justify-between gap-2 border border-[#e4e4e7] bg-[#f7f7f8] p-4 transition-colors hover:border-[#a3a2a5] rounded-sm"
+            className="metro-tile flex min-h-[132px] flex-col justify-between bg-[#f2f2f3] p-5 text-[#18181b] hover:bg-[#e7e7ea]"
           >
-            <span className="text-sm font-semibold text-[#111113]">
-              Contact
-            </span>
-            <span className="text-xs text-[#52525b]">
+            <span className="text-xs leading-relaxed text-[#52525b]">
               GitHub profile and configurable links.
             </span>
+            <span className="text-base font-semibold">Contact</span>
           </Link>
         </div>
       </section>

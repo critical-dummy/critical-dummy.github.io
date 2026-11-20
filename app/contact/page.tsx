@@ -18,7 +18,6 @@ export default async function ContactPage() {
   );
   const profile = profileResult.data;
 
-  // Include live GitHub profile blog if not already covered by config channels
   const configuredHrefs = new Set(
     siteConfig.contact.channels.map((c) => c.href?.replace(/\/+$/, ''))
   );
@@ -43,11 +42,11 @@ export default async function ContactPage() {
 
   return (
     <MotionSection className="space-y-8">
-      <header className="space-y-2 border-b border-[#e4e4e7] pb-5">
-        <h1 className="text-2xl font-bold tracking-tight text-[#111113]">
-          Contact
+      <header className="space-y-2">
+        <h1 className="text-3xl font-light tracking-tight text-[#18181b] sm:text-4xl">
+          contact
         </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-[#52525b]">
+        <p className="max-w-2xl text-[15px] leading-relaxed text-[#52525b]">
           {siteConfig.contact.lead}
         </p>
       </header>
