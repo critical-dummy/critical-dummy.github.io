@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { fetchClientGitHubRepos } from '@/lib/github-client';
 import {
   extractLanguages,
   filterAndSortRepos,
@@ -63,9 +64,20 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
+      if (process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true') {
+        const directRepos = await fetchClientGitHubRepos();
+        setResult(directRepos);
+        return;
+      }
+
       const response = await fetch('/api/github?section=repos&fresh=1', {
         cache: 'no-store',
       });
+      if (response.status === 404 || response.status === 405) {
+        const directRepos = await fetchClientGitHubRepos();
+        setResult(directRepos);
+        return;
+      }
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
@@ -80,7 +92,7 @@ export function ProjectsExplorer({ initialResult }: ProjectsExplorerProps) {
         status: 'error',
         data: prev.data,
         rateLimit: prev.rateLimit,
-        errorMessage: 'Failed to refresh repository data from the server.',
+        errorMessage: 'Failed to refresh repository data from GitHub.',
         fetchedAt: new Date().toISOString(),
       }));
     } finally {

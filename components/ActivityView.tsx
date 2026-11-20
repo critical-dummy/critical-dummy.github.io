@@ -2,6 +2,11 @@
 
 import { useMemo, useState } from 'react';
 import {
+  fetchClientGitHubProfile,
+  fetchClientGitHubPublicEvents,
+  fetchClientGitHubRepos,
+} from '@/lib/github-client';
+import {
   extractLanguages,
   formatUtcDate,
   formatUtcDateTime,
@@ -53,10 +58,30 @@ export function ActivityView({
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
+    const refreshDirect = async () => {
+      const [profile, reposData, eventsData] = await Promise.all([
+        fetchClientGitHubProfile(),
+        fetchClientGitHubRepos(),
+        fetchClientGitHubPublicEvents(),
+      ]);
+      setProfileResult(profile);
+      setReposResult(reposData);
+      setEventsResult(eventsData);
+    };
+
     try {
+      if (process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true') {
+        await refreshDirect();
+        return;
+      }
+
       const response = await fetch('/api/github?section=activity&fresh=1', {
         cache: 'no-store',
       });
+      if (response.status === 404 || response.status === 405) {
+        await refreshDirect();
+        return;
+      }
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
