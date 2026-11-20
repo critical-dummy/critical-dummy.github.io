@@ -3,8 +3,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { AnimatePresence, motion } from 'motion/react';
 import { MetroIcon } from '@/components/MetroIcon';
 import { siteConfig } from '@/config/site';
+import {
+  METRO_EASE,
+  METRO_PIVOT_INDICATOR_DURATION,
+} from '@/lib/navigation-motion';
 import { cn } from '@/lib/utils';
 
 export function SiteHeader() {
@@ -65,8 +70,13 @@ export function SiteHeader() {
               >
                 {item.label.toLowerCase()}
                 {active && (
-                  <span
+                  <motion.span
+                    layoutId="metro-pivot-indicator"
                     aria-hidden="true"
+                    transition={{
+                      duration: METRO_PIVOT_INDICATOR_DURATION,
+                      ease: METRO_EASE,
+                    }}
                     className="absolute inset-x-0 bottom-0 h-[2px] bg-[#ea580c]"
                   />
                 )}
@@ -107,50 +117,56 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {mobileOpen && (
-        <nav
-          id="mobile-navigation-drawer"
-          aria-label="Mobile navigation"
-          className="bg-[#18181b] px-4 py-4 text-white md:hidden"
-        >
-          <ul className="flex flex-col gap-1">
-            {siteConfig.navigation.map((item) => {
-              const active = isActive(item.href);
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpenPathname(null)}
-                    aria-current={active ? 'page' : undefined}
-                    className={cn(
-                      'flex min-h-[44px] items-center justify-between px-3 py-2 text-lg font-light transition-colors',
-                      active
-                        ? 'bg-[#c2410c] font-normal text-white'
-                        : 'text-[#d4d4d8] hover:bg-[#27272a] hover:text-white'
-                    )}
-                  >
-                    <span>{item.label.toLowerCase()}</span>
-                  </Link>
-                </li>
-              );
-            })}
-            <li className="pt-2">
-              <a
-                href={siteConfig.identity.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex min-h-[44px] items-center justify-between border-2 border-white px-3 py-2 text-sm font-semibold text-white"
-              >
-                <span className="inline-flex items-center gap-2">
-                  <MetroIcon name="github" className="text-[15px]" />
-                  <span>GitHub Profile</span>
-                </span>
-                <MetroIcon name="arrow-up-right" className="text-[13px]" />
-              </a>
-            </li>
-          </ul>
-        </nav>
-      )}
+      <AnimatePresence initial={false}>
+        {mobileOpen && (
+          <motion.nav
+            id="mobile-navigation-drawer"
+            aria-label="Mobile navigation"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: METRO_EASE }}
+            className="bg-[#18181b] px-4 py-4 text-white md:hidden"
+          >
+            <ul className="flex flex-col gap-1">
+              {siteConfig.navigation.map((item) => {
+                const active = isActive(item.href);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpenPathname(null)}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'flex min-h-[44px] items-center justify-between px-3 py-2 text-lg font-light transition-colors',
+                        active
+                          ? 'bg-[#c2410c] font-normal text-white'
+                          : 'text-[#d4d4d8] hover:bg-[#27272a] hover:text-white'
+                      )}
+                    >
+                      <span>{item.label.toLowerCase()}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+              <li className="pt-2">
+                <a
+                  href={siteConfig.identity.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex min-h-[44px] items-center justify-between border-2 border-white px-3 py-2 text-sm font-semibold text-white"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <MetroIcon name="github" className="text-[15px]" />
+                    <span>GitHub Profile</span>
+                  </span>
+                  <MetroIcon name="arrow-up-right" className="text-[13px]" />
+                </a>
+              </li>
+            </ul>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

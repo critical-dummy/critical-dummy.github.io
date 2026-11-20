@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Mono, Open_Sans } from 'next/font/google';
+import { MetroTransitionProvider } from '@/components/MetroTransitionProvider';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteHeader } from '@/components/SiteHeader';
 import { siteConfig } from '@/config/site';
@@ -70,16 +71,18 @@ export default function RootLayout({
         suppressHydrationWarning
         className="flex min-h-screen flex-col bg-white font-sans text-[#111113] antialiased"
       >
-        <SiteHeader />
-        <main
-          className={cn(
-            'mx-auto w-full flex-1 px-4 py-8 sm:px-6 sm:py-10',
-            siteConfig.layout.maxWidthClass
-          )}
-        >
-          {children}
-        </main>
-        <SiteFooter />
+        <MetroTransitionProvider>
+          <SiteHeader />
+          <main
+            className={cn(
+              'mx-auto w-full flex-1 overflow-x-clip px-4 py-8 sm:px-6 sm:py-10',
+              siteConfig.layout.maxWidthClass
+            )}
+          >
+            {children}
+          </main>
+          <SiteFooter />
+        </MetroTransitionProvider>
       </body>
     </html>
   );
